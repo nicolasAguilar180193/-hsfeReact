@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Person } from "@/models";
 import { addFavorite } from "@/redux/states";
 import { AppStore } from "@/redux/store";
@@ -67,6 +67,10 @@ const PeopleTable: React.FC<PeopleTableInterface> = () => {
 		}
 	]
 
+	useEffect(() => {
+		setSelectedPeople(favoritePeople)
+	}, []);
+		
 	return (
 		<DataGrid
 			disableColumnSelector
