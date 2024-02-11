@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { People } from "@/data";
 import { Person } from "@/models";
 import { Checkbox } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { addFavorite, addPeople } from "@/redux/states";
+import store from "@/redux/store";
 
 export interface HomeInterface { }
 
 const Home: React.FC<HomeInterface> = () => {
 	const [selectedPeople, setSelectedPeople] = React.useState<Person[]>([])
+	const dispatch = useDispatch()
 	const pageSize = 5
 	const pageSizeOptions = [5, 10, 25]
 
@@ -15,9 +19,9 @@ const Home: React.FC<HomeInterface> = () => {
 	const filterPerson = (person: Person) => selectedPeople.filter(p => p.id !== person.id)
 
 	const handleChange = (person: Person) => {
-		setSelectedPeople(findPerson(person) ? 
-			filterPerson(person) : [...selectedPeople, person]
-		)
+		const filteredPeople = findPerson(person) ? filterPerson(person) : [...selectedPeople, person]
+		dispatch(addFavorite(filteredPeople))
+		setSelectedPeople(filteredPeople)
 	}
 
 	const columns = [
@@ -62,6 +66,10 @@ const Home: React.FC<HomeInterface> = () => {
 		}
 	]
 
+	useEffect(() => {
+		dispatch(addPeople(People))
+	}, [])
+
 	return (
 		<DataGrid
 			disableColumnSelector
@@ -72,7 +80,7 @@ const Home: React.FC<HomeInterface> = () => {
 				pagination: { paginationModel: { pageSize: pageSize } },
 			}}
 			pageSizeOptions={pageSizeOptions}
-			rows={People}
+			rows={store.getState().people}
 			columns={columns}
 			getRowId={(row: any) => row.id}
 		/>
