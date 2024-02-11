@@ -14,9 +14,10 @@ const PeopleTable: React.FC<PeopleTableInterface> = () => {
 	const pageSize = 5
 	const pageSizeOptions = [5, 10, 25]
 	const statePeople = useSelector((store: AppStore) => store.people)
+	const favoritePeople = useSelector((store: AppStore) => store.favorites);
 
-	const findPerson = (person: Person) => !!selectedPeople.find(p => p.id === person.id)
-	const filterPerson = (person: Person) => selectedPeople.filter(p => p.id !== person.id)
+	const findPerson = (person: Person) => !!favoritePeople.find(p => p.id === person.id)
+	const filterPerson = (person: Person) => favoritePeople.filter(p => p.id !== person.id)
 
 	const handleChange = (person: Person) => {
 		const filteredPeople = findPerson(person) ? filterPerson(person) : [...selectedPeople, person]
